@@ -31,7 +31,8 @@
   .sub{max-height:0;overflow:hidden;transition:max-height .25s ease}
   .sub.open{max-height:1000px}
   .sub a.c{margin:10px 0 0;font-size:13.5px;padding:13px 16px}
-  .ic img,.s img{width:100%;height:100%;object-fit:cover}
+  .ic img{width:62%;height:62%;object-fit:contain;display:block}
+  .s img{width:100%;height:100%;object-fit:cover}
   .ch{opacity:.5;font-size:17px}
   [dir=ltr] .ch{transform:scaleX(-1)}
   hr{border:0;border-top:1px solid var(--hdr-bg);margin:28px 0 18px}
@@ -270,8 +271,7 @@ function iconHtml(o) {
 function cardLinkHtml(c, i, an) {
   const ih = iconHtml(c);
   return '<a class="c"' + an(i) + ' href="' + esc(c.url) + '" target="_blank" rel="noopener"><span class="ch">‹</span>' +
-    '<button class="dots" onclick="event.preventDefault();event.stopPropagation();openCardSheet(' + i + ')">⋯</button>' +
-    '<span class="ct">' + (lang === 'ar' ? c.ar : c.en) + '</span>' + (ih ? ih : '') + '</a>';
+    '<span class="ct">' + (lang === 'ar' ? c.ar : c.en) + '</span>' + (ih ? '<span class="ic">' + ih + '</span>' : '') + '</a>';
 }
 function cardGroupHtml(c, i, an) {
   const ih = iconHtml(c), open = !!c._open;
@@ -281,8 +281,7 @@ function cardGroupHtml(c, i, an) {
   }).join('');
   return '<div class="grp"><a class="c"' + an(i) + ' href="javascript:void(0)" onclick="toggleGroup(' + i + ')">' +
     '<button class="chev' + (open ? ' open' : '') + '" onclick="event.preventDefault();event.stopPropagation();toggleGroup(' + i + ')">▾</button>' +
-    '<button class="dots" onclick="event.preventDefault();event.stopPropagation();openCardSheet(' + i + ')">⋯</button>' +
-    '<span class="ct">' + (lang === 'ar' ? c.ar : c.en) + '</span>' + (ih ? ih : '') + '</a>' +
+    '<span class="ct">' + (lang === 'ar' ? c.ar : c.en) + '</span>' + (ih ? '<span class="ic">' + ih + '</span>' : '') + '</a>' +
     '<div class="sub' + (open ? ' open' : '') + '" id="sub-' + i + '">' + subs + '</div></div>';
 }
 function toggleGroup(i) { D.cards[i]._open = !D.cards[i]._open; render(); }
@@ -337,9 +336,7 @@ function render(play) {
   $('social-container').innerHTML = D.socials.filter(c => c.visible).map((c, i) => {
     const mono = (D.style || {}).socialStyle === 'mono';
     const ih = c.iconType === 'soc' ? socIconHtml(c.iconValue, mono) : iconHtml(c);
-    return '<span class="s">' +
-      '<a' + an(i + D.cards.length) + ' href="' + esc(c.url) + '" target="_blank" rel="noopener" title="' + esc(c.name) + '">' + (ih || esc(c.name)) + '</a>' +
-      '<button class="dots" onclick="event.preventDefault();event.stopPropagation();openSocSheet(' + i + ')">⋯</button></span>';
+    return '<a class="s"' + an(i + D.cards.length) + ' href="' + esc(c.url) + '" target="_blank" rel="noopener" title="' + esc(c.name) + '">' + (ih || esc(c.name)) + '</a>';
   }).join('');
 }
 function toggleLang() { lang = lang === 'ar' ? 'en' : 'ar'; render(); }
